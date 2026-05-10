@@ -8,9 +8,9 @@ export function initSocket(server) {
   io = new Server(server, {
     cors: {
       origin: [
-        "http://localhost:5173",
-        "https://talk-loop-iota.vercel.app",
-      ],
+  "http://localhost:5173",
+  "https://talk-loop-phi.vercel.app",
+],
       credentials: true,
       methods: ["GET", "POST"],
     },
