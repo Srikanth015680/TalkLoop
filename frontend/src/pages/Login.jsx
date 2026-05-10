@@ -18,7 +18,7 @@ const Login = () => {
 
   const { isLoggingIn } = useSelector((state) => state.auth);
   const dispatch = useDispatch()
-  const navigate = useNavigate(); // ✅ add this
+  const navigate = useNavigate(); // 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
