@@ -6,6 +6,7 @@ import cors from "cors"
 import userRouter from "./routes/userRoute.js"
 import messageRouter from "./routes/messageRoute.js"
 const app=express()
+app.set("trust proxy", 1);
 config({path:"./config/config.env"})
 
 app.use(
