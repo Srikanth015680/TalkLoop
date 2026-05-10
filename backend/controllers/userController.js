@@ -34,7 +34,9 @@ export const signup = catchAsyncError(async (req, res) => {
     });
   }
 
-  const isEmailAlreadyUsed = await UserModel.findOne({ email });
+  const isEmailAlreadyUsed = await UserModel.findOne({
+    email,
+  });
 
   if (isEmailAlreadyUsed) {
     return res.status(400).json({
@@ -96,6 +98,15 @@ export const signin = catchAsyncError(async (req, res) => {
     return res.status(400).json({
       success: false,
       message: "Please provide all credentials",
+    });
+  }
+
+  const emailRegex = /^\S+@\S+\.\S+$/;
+
+  if (!emailRegex.test(email)) {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid email format",
     });
   }
 
@@ -167,9 +178,9 @@ export const signout = catchAsyncError(async (req, res) => {
 });
 
 export const getuser = catchAsyncError(async (req, res) => {
-  const user = await UserModel.findById(req.user._id).select(
-    "-password"
-  );
+  const user = await UserModel.findById(
+    req.user._id
+  ).select("-password");
 
   res.status(200).json({
     success: true,
