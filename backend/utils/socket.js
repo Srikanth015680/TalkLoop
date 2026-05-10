@@ -7,8 +7,12 @@ let io;
 export function initSocket(server) {
   io = new Server(server, {
     cors: {
-      origin: process.env.FRONTEND_URL,
+      origin: [
+        "http://localhost:5173",
+        "https://talk-loop-iota.vercel.app",
+      ],
       credentials: true,
+      methods: ["GET", "POST"],
     },
   });
 
@@ -24,22 +28,24 @@ export function initSocket(server) {
         userSocketMap[userId] = [];
       }
 
-      // avoid duplicate socket ids
+      // prevent duplicate socket ids
       if (!userSocketMap[userId].includes(socket.id)) {
         userSocketMap[userId].push(socket.id);
       }
     }
 
+    // send updated online users
     io.emit("getOnlineUsers", Object.keys(userSocketMap));
 
     socket.on("disconnect", () => {
-      console.log(" User disconnected:", socket.id);
+      console.log("User disconnected:", socket.id);
 
       if (userId && userSocketMap[userId]) {
         userSocketMap[userId] = userSocketMap[userId].filter(
           (id) => id !== socket.id
         );
 
+        // remove user if no sockets left
         if (userSocketMap[userId].length === 0) {
           delete userSocketMap[userId];
         }
