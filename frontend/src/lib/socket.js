@@ -2,20 +2,29 @@ import { io } from "socket.io-client";
 
 let socket = null;
 
-export const connectSocket = (userId) => {
+export const connectSocket = (user) => {
+  // extract actual id safely
+  const userId =
+    typeof user === "object" ? user?._id : user;
+
   if (!userId) {
     console.warn("Skip socket: userId not ready");
     return null;
   }
 
-  if (socket?.connected) return socket;
+  // already connected
+  if (socket?.connected) {
+    return socket;
+  }
 
   const URL =
     import.meta.env.VITE_SOCKET_URL ||
-    "https://talk-loop-backend.vercel.app";
+    "http://localhost:3000";
 
   socket = io(URL, {
-    query: { userId },
+    query: {
+      userId: String(userId),
+    },
     withCredentials: true,
     transports: ["websocket", "polling"],
     reconnection: true,
@@ -24,15 +33,15 @@ export const connectSocket = (userId) => {
   });
 
   socket.on("connect", () => {
-    console.log("Connected:", socket.id);
+    console.log(" Connected:", socket.id);
   });
 
   socket.on("disconnect", () => {
-    console.log("Disconnected");
+    console.log(" Disconnected");
   });
 
   socket.on("connect_error", (err) => {
-    console.error("Socket error:", err.message);
+    console.error(" Socket error:", err.message);
   });
 
   return socket;
