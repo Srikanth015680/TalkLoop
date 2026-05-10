@@ -8,15 +8,16 @@ export const connectSocket = (userId) => {
     return null;
   }
 
-  
-  if (socket && socket.connected) return socket;
+  if (socket?.connected) return socket;
 
   const URL =
-    import.meta.env.VITE_SOCKET_URL || "http://localhost:3000";
+    import.meta.env.VITE_SOCKET_URL ||
+    "https://talk-loop-backend.vercel.app";
 
   socket = io(URL, {
     query: { userId },
-    transports: ["websocket"],
+    withCredentials: true,
+    transports: ["websocket", "polling"],
     reconnection: true,
     reconnectionAttempts: 5,
     reconnectionDelay: 1000,
