@@ -8,11 +8,16 @@ import messageRouter from "./routes/messageRoute.js"
 const app=express()
 config({path:"./config/config.env"})
 
-app.use(cors({
-    origin:process.env.FRONTEND_URL,
-    credentials:true,
-    methods:["GET","POST","PUT","DELETE"]
-}))
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://talk-loop-chat.vercel.app",
+    ],
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  })
+);
 
 app.use(cookieParser())
 app.use(express.json())
